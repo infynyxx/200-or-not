@@ -1,0 +1,5 @@
+cron:
+- description: 'Check if given URLs return status code 200'
+  url: /downornot
+  schedule: every 1 minutes
+  timezone: America/New_York
