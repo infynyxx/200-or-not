@@ -6,11 +6,6 @@ from google.appengine.api.urlfetch import InvalidURLError, DownloadError, Respon
 
 from yaml import load
 
-class MainPage(webapp.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write('Hello world!')
-
 class DownOrNot(webapp.RequestHandler):
     
     _settings = None
@@ -43,7 +38,13 @@ class DownOrNot(webapp.RequestHandler):
                 sender = self._settings['email']['sender']
                 mail.send_mail(sender=sender, to=to, subject=subject, body=message)
 
-app = webapp.WSGIApplication([('/', MainPage), ('/downornot', DownOrNot)], debug=True)
+class NotFoundHandler(webapp.RequestHandler):
+    def get(self):
+        self.error(404)
+        self.response.out.write("<html><title>Boo!!!</title><body><h1>Not Found!</h1></body></html>")
+
+
+app = webapp.WSGIApplication([('/downornot', DownOrNot), ('/.*', NotFoundHandler)], debug=True)
 
 def main():
     run_wsgi_app(app)

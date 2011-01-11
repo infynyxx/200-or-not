@@ -4,6 +4,9 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /.*
+- url: /downornot
   script: main.py
   login: admin
+
+- url: /*
+  script: main.py
