@@ -4,8 +4,7 @@ from google.appengine.api import mail
 from google.appengine.api import urlfetch
 from google.appengine.api.urlfetch import InvalidURLError, DownloadError, ResponseTooLargeError
 
-import os
-from yaml import load 
+from yaml import load
 
 class MainPage(webapp.RequestHandler):
     def get(self):
@@ -13,12 +12,14 @@ class MainPage(webapp.RequestHandler):
         self.response.out.write('Hello world!')
 
 class DownOrNot(webapp.RequestHandler):
-    def _get_urls(self):
-        settings = load(open('settings.yaml', 'r').read())
-        return settings['urls_to_check']
+    
+    _settings = None
+
+    def __init__(self):
+        self._settings = load(open('settings.yaml', 'r').read())
 
     def get(self):
-        url_list = self._get_urls()
+        url_list = self._settings['urls_to_check']
         for url in url_list:
             subject = '%s is down!' % (url)
             message = subject + '\n'
@@ -38,7 +39,9 @@ class DownOrNot(webapp.RequestHandler):
                 message = message + '\nThe response data exceeded the maximum allowed size'
 
             if send_mail == True:
-                mail.send_mail(sender="Google App Engine Site Monitoring <dynamism360@gmail.com>", to="Praj <praj@prajwal-tuladhar.net.np>", subject=subject, body=message);
+                to = self._settings['email']['to']
+                sender = self._settings['email']['sender']
+                mail.send_mail(sender=sender, to=to, subject=subject, body=message)
 
 app = webapp.WSGIApplication([('/', MainPage), ('/downornot', DownOrNot)], debug=True)
 
