@@ -31,17 +31,17 @@ class DownOrNot(webapp.RequestHandler):
         url_list = self._settings['urls_to_check']
         for url in url_list:
             subject = '%s is down!' % (url)
-            message = subject + '\n'
+            message = ''
             has_error = True
             try:
-                result = urlfetch.fetch(url, follow_redirects=False)
+                result = urlfetch.fetch(url, follow_redirects=False, deadline=self._settings['request_timeout'])
                 status_code = result.status_code
                 if status_code == 200:
                     has_error = False
                 else:
-                    message = message + '\n Status code of %d instead of 200' % (status_code)
+                    message = message + '\nStatus code of %d instead of 200' % (status_code)
             except InvalidURLError, e:
-                message = message + '\n Exception: The URL of the request was not a valid URL'
+                message = message + '\nException: The URL of the request was not a valid URL'
             except DownloadError, e:
                 message = message + '\nException: There was an error retrieving the data.'
             except ResponseTooLargeError, e:
@@ -59,7 +59,7 @@ class DownOrNot(webapp.RequestHandler):
                     to_list = sms_options['to']
                     sms_handler = TwilioSmsHandler(sms_options)
                     for number in to_list:
-                        sms_handler.send(number, subject)
+                        sms_handler.send(number, subject + '\n' + message)
 
 
 class NotFoundHandler(webapp.RequestHandler):
