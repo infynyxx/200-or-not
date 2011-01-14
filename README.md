@@ -5,7 +5,7 @@ A simple Google App Engine service to check if the given site is down or not
 * When I say monitoring, I mean checking status code == 200 only; nothing more than that
 * It uses [URL Fetch API](http://code.google.com/appengine/docs/python/urlfetch/)
 * /downornot is accessed via cron job and can be accessed by admin only
-* If given site is down, it will email to specified address
+* If given site is down, it will email to specified address or if SMS option is enabled with valid Twilio settings, will also send SMS
 
 Installaion
 ------------
