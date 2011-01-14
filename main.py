@@ -34,7 +34,7 @@ class DownOrNot(webapp.RequestHandler):
             message = ''
             has_error = True
             try:
-                result = urlfetch.fetch(url, follow_redirects=False, deadline=self._settings['request_timeout'])
+                result = urlfetch.fetch(url, follow_redirects=False, deadline=self._settings['request_timeout'], method=urlfetch.HEAD)
                 status_code = result.status_code
                 if status_code == 200:
                     has_error = False
