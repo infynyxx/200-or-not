@@ -4,6 +4,11 @@ from google.appengine.api import mail
 from google.appengine.api import urlfetch
 from google.appengine.api.urlfetch import InvalidURLError, DownloadError, ResponseTooLargeError
 
+try:
+    from google.appengine.runtime import DeadlineExceededError
+except ImportError:
+    from google.appengine.runtime.apiproxy_errors import DeadlineExceededError
+
 from yaml import load
 import twilio
 
@@ -46,6 +51,8 @@ class DownOrNot(webapp.RequestHandler):
                 message = message + '\nException: There was an error retrieving the data.'
             except ResponseTooLargeError, e:
                 message = message + '\nThe response data exceeded the maximum allowed size'
+            except DeadlineExceededError:
+                message = message + '\nDeadlineExceededError: Operation could not be completed in time...'
             
 
             if has_error == True:
