@@ -1,3 +1,5 @@
+import logging
+
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
@@ -10,7 +12,9 @@ except ImportError:
     from google.appengine.runtime.apiproxy_errors import DeadlineExceededError
 
 from yaml import load
+
 import twilio
+from model import DownLog
 
 class TwilioSmsHandler:
     def __init__(self, sms_options):
@@ -44,18 +48,27 @@ class DownOrNot(webapp.RequestHandler):
                 if status_code == 200:
                     has_error = False
                 else:
-                    message = message + '\nStatus code of %d instead of 200' % (status_code)
+                    message = message + 'Status code of %d instead of 200' % (status_code)
             except InvalidURLError, e:
-                message = message + '\nException: The URL of the request was not a valid URL'
+                message = message + 'Exception: The URL of the request was not a valid URL'
             except DownloadError, e:
-                message = message + '\nException: There was an error retrieving the data.'
+                message = message + 'Exception: There was an error retrieving the data.'
             except ResponseTooLargeError, e:
-                message = message + '\nThe response data exceeded the maximum allowed size'
+                message = message + 'The response data exceeded the maximum allowed size'
             except DeadlineExceededError:
-                message = message + '\nDeadlineExceededError: Operation could not be completed in time...'
+                message = message + 'DeadlineExceededError: Operation could not be completed in time...'
             
-
             if has_error == True:
+                #get last log
+                last_log = DownLog.get_last_log(url=str(url))
+                if last_log is not None:
+                    message = message + '\nLast downtime: ' + last_log.log_timestamp.ctime()
+
+                #save into database
+                downlog = DownLog(url=url, description='aaa')
+                downlog.put()
+                
+                logging.debug('Message: ', message)
                 #send email
                 to = self._settings['email']['to']
                 sender = self._settings['email']['sender']
