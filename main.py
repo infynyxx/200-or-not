@@ -1,5 +1,4 @@
 import logging
-import time, os
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -17,8 +16,6 @@ from yaml import load
 import twilio
 from model import DownLog
 
-os.environ['TZ'] = 'EST+05EDT,M4.1.0,M10.5.0'
-time.tzset()
 
 class TwilioSmsHandler:
     def __init__(self, sms_options):
