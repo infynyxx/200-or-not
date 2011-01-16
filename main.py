@@ -65,7 +65,7 @@ class DownOrNot(webapp.RequestHandler):
                     message = message + '\nLast downtime: ' + last_log.log_timestamp.ctime()
 
                 #save into database
-                downlog = DownLog(url=url, description='aaa')
+                downlog = DownLog(url=url, description=message)
                 downlog.put()
                 
                 logging.debug('Message: ', message)

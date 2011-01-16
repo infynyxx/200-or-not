@@ -2,7 +2,7 @@ import datetime
 from google.appengine.ext import db
 
 class DownLog(db.Model):
-    log_timestamp = db.DateProperty(required=True, auto_now_add=True)
+    log_timestamp = db.DateTimeProperty(required=True, auto_now_add=True)
     url = db.StringProperty(required=True)
     description = db.StringProperty(required=False, multiline=True)
     
