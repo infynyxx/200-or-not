@@ -1,0 +1,18 @@
+urls_to_check:
+- 'http://infynyxx.com/'
+- 'http://blog.sailthru.com/'
+
+request_timeout: 10 #Request timeout for urlfetch() in seconds, max value is 10 
+
+email:
+  sender: 'Google App Engine Site Monitoring <your@username.com>'
+  to: 'Prajwal Tuladhar <to@someone.com>'
+
+#Send SMS using Twilio's API
+#Disable whole section if you don't want to use this option
+sms:
+  twilio_sid: :'****'
+  twilio_auth_token: '***'
+  twilio_number: '*****'
+  to:
+  - '******'
