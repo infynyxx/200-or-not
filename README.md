@@ -16,5 +16,3 @@ Installation
 Running
 --------
     <google_app_engine_sdk_path>/dev_appserver.py <src_folder>
-
-![screencap](http://i.imgur.com/OTQdQ.png)
